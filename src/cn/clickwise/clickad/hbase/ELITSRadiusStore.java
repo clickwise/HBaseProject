@@ -52,18 +52,17 @@ public class ELITSRadiusStore extends RadiusStore {
 		 * configuration.set("hbase.master", "192.168.10.103:60000");
 		 ********************************/
 
-		/***********
-		 * local*******************
-		 * configuration.set("hbase.zookeeper.property.clientPort", "2181");
-		 * configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
-		 * configuration.set("hbase.master", "192.168.110.80:60000");
-		 ************************************/
+		/************ local*******************/
+		configuration.set("hbase.zookeeper.property.clientPort", "2181");
+		configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
+		configuration.set("hbase.master", "192.168.110.80:60000");
+		/************************************/
 
-		/************ hn *****************/
+		/************ zj *****************
 		configuration.set("hbase.zookeeper.property.clientPort", "2181");
 		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
 		configuration.set("hbase.master", "192.168.10.128:60010");
-		/********************************/
+		********************************/
 
 		pool = new HTablePool(configuration, 100);
 		String[] cfs = { RID, OIP };
@@ -155,6 +154,8 @@ public class ELITSRadiusStore extends RadiusStore {
 		String radiusid = "";
 		String time = "";
 
+		String default_time=default_day+" 12:29:20";
+		
 		String[] fields = record.split("\\s+");
 		if (fields.length < 1) {
 			return;
@@ -177,7 +178,7 @@ public class ELITSRadiusStore extends RadiusStore {
 		    radiusid=tokens[1];
 		    status=tokens[2];
 		    
-			String rowkey = md5ip + time.replaceAll("\\s+", "") + status;
+			String rowkey = md5ip + default_time.replaceAll("\\s+", "") + status;
 			Put put = new Put(rowkey.getBytes());
 			put.add(RID.getBytes(), "c".getBytes(), radiusid.getBytes());
 			put.add(OIP.getBytes(), "c".getBytes(), ip.getBytes());
@@ -278,7 +279,7 @@ public class ELITSRadiusStore extends RadiusStore {
 						if (SSO.tioe(line)) {
 							continue;
 						}
-						eitsl.write(line);
+						eitsl.write_default_day(line);
 
 					} catch (Exception e) {
 
