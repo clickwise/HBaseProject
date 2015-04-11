@@ -91,6 +91,7 @@ public class LITSRadiusStore extends RadiusStore {
 				tableDescriptor.addFamily(new HColumnDescriptor(cfs[j]));
 			}
 			hBaseAdmin.createTable(tableDescriptor);
+			
 		} catch (MasterNotRunningException e) {
 			e.printStackTrace();
 		} catch (ZooKeeperConnectionException e) {
