@@ -69,7 +69,7 @@ public class ITServer implements Runnable{
 			ip=phash.get("ip");
 			time=phash.get("time");
 			
-			List<String> radiusIds=elits.get(ip, time);
+			List<String> radiusIds=elits.get(ip, time.replaceAll("_", " "));
 			
 			String restr="";
 			if(radiusIds==null)
