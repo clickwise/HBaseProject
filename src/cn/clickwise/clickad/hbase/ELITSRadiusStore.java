@@ -220,7 +220,11 @@ public class ELITSRadiusStore extends RadiusStore {
 				for (KeyValue keyValue : r.raw()) {
 					cf=new String(keyValue.getFamily());
 					va=new String(keyValue.getValue());
-					rlist.add(va);
+					if(cf.equals("rid"))
+					{
+						rlist.add(va);
+					}
+				
 					System.out.println("列：" + cf+ "====值:" + va);
 				}
 			}
