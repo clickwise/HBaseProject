@@ -211,12 +211,17 @@ public class ELITSRadiusStore extends RadiusStore {
 			Scan s = new Scan(startkey.getBytes(), endkey.getBytes());
 
 			ResultScanner rs = pool.getTable(TNAME).getScanner(s);
-
+            
+			String cf="";
+			String va="";
+			
 			for (Result r : rs) {
 				System.out.println("获得到rowkey:" + new String(r.getRow()));
 				for (KeyValue keyValue : r.raw()) {
-					System.out.println("列：" + new String(keyValue.getFamily())
-							+ "====值:" + new String(keyValue.getValue()));
+					cf=new String(keyValue.getFamily());
+					va=new String(keyValue.getValue());
+					rlist.add(va);
+					System.out.println("列：" + cf+ "====值:" + va);
 				}
 			}
 		} catch (IOException e) {
