@@ -293,7 +293,7 @@ public class ELITSRadiusStore extends RadiusStore {
 						if (SSO.tioe(line)) {
 							continue;
 						}
-						eitsl.write_default_day(line);
+						eitsl.write(line);
 
 					} catch (Exception e) {
 
