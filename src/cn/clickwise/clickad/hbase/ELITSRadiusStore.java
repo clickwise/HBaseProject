@@ -45,8 +45,7 @@ public class ELITSRadiusStore extends RadiusStore {
 
 		configuration = HBaseConfiguration.create();
 
-		/************
-		 * hn *****************
+		/************ hn *****************
 		 * configuration.set("hbase.zookeeper.property.clientPort", "2181");
 		 * configuration.set("hbase.zookeeper.quorum", "192.168.10.103");
 		 * configuration.set("hbase.master", "192.168.10.103:60000");
@@ -109,8 +108,9 @@ public class ELITSRadiusStore extends RadiusStore {
 		String ip = "";
 		String status = "";
 		String radiusid = "";
-		String time = "";
-
+		long time = 0;
+		String time_str="";
+		
 		String[] fields = record.split("\\s+");
 		if (fields.length < 1) {
 			return;
@@ -129,8 +129,12 @@ public class ELITSRadiusStore extends RadiusStore {
 		    	continue;
 		    }
 		    
-		    
-			String rowkey = md5ip + time.replaceAll("\\s+", "") + status;
+		    time=Long.parseLong(tokens[0]);
+		    radiusid=tokens[1];
+		    status=tokens[2];	    
+		    time_str=TimeOpera.long2strm(time);
+		   		    		 		
+			String rowkey = md5ip + time_str.replaceAll("\\s+", "") + status;
 			Put put = new Put(rowkey.getBytes());
 			put.add(RID.getBytes(), "c".getBytes(), radiusid.getBytes());
 			put.add(OIP.getBytes(), "c".getBytes(), ip.getBytes());
@@ -143,7 +147,7 @@ public class ELITSRadiusStore extends RadiusStore {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
+			
 		}
 	}
 
@@ -288,7 +292,7 @@ public class ELITSRadiusStore extends RadiusStore {
 						if (SSO.tioe(line)) {
 							continue;
 						}
-						eitsl.write_default_day(line);
+						eitsl.write(line);
 
 					} catch (Exception e) {
 
