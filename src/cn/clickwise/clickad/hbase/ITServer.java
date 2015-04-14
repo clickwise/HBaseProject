@@ -90,6 +90,7 @@ public class ITServer implements Runnable{
 			  }
 			  restr=restr+radiusIds.get(radiusIds.size()-1);
 			}
+			
 			System.err.println("restr:"+restr);
 			//encode_res = encode_res.replaceAll("\\s+", "");	
 			//exchange.sendResponseHeaders(200, encode_res.length());
