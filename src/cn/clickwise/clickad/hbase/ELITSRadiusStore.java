@@ -45,24 +45,23 @@ public class ELITSRadiusStore extends RadiusStore {
 
 		configuration = HBaseConfiguration.create();
 
-		/************
-		 * hn *****************
+		/************ hn *****************
 		 * configuration.set("hbase.zookeeper.property.clientPort", "2181");
 		 * configuration.set("hbase.zookeeper.quorum", "192.168.10.103");
 		 * configuration.set("hbase.master", "192.168.10.103:60000");
 		 ********************************/
 
-		/************ local*******************/
+		/************ local*******************
 		configuration.set("hbase.zookeeper.property.clientPort", "2181");
 		configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
 		configuration.set("hbase.master", "192.168.110.80:60000");
-		/************************************/
+		************************************/
 
-		/************ zj *****************
+		/************ zj *****************/
 		configuration.set("hbase.zookeeper.property.clientPort", "2181");
 		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
 		configuration.set("hbase.master", "192.168.10.128:60010");
-		********************************/
+		/********************************/
 
 		pool = new HTablePool(configuration, 100);
 		String[] cfs = { RID, OIP };
