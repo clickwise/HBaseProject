@@ -69,6 +69,12 @@ public class ITServer implements Runnable{
 			ip=phash.get("ip");
 			time=phash.get("time");
 			
+			//只有日期
+			if(time.length()<15)
+			{
+			   time=time.trim()+"_12:29:20";
+			}
+			
 			List<String> radiusIds=elits.get(ip, time.replaceAll("_", " "));
 			
 			String restr="";
