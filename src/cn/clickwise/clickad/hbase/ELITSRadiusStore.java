@@ -36,7 +36,7 @@ public class ELITSRadiusStore extends RadiusStore {
 	public static HTablePool pool;
 	public static String RID = "rid";
 	public static String OIP = "oip";
-	public static String TNAME = "hradius";
+	public static String TNAME = "hhradius";
 
 	public  String default_day="";
 	
