@@ -65,7 +65,7 @@ public class HbaseBatchImport {
 		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
 
 		// 设置hbase表名称
-		configuration.set(TableOutputFormat.OUTPUT_TABLE, "wlan_log");
+		configuration.set(TableOutputFormat.OUTPUT_TABLE, "hradius");
 
 		// 将该值改大，防止hbase超时退出
 		configuration.set("dfs.socket.timeout", "180000");
@@ -82,7 +82,7 @@ public class HbaseBatchImport {
 		// 不再设置输出路径，而是设置输出格式类型
 		job.setOutputFormatClass(TableOutputFormat.class);
 
-		FileInputFormat.setInputPaths(job, "hdfs://hadoop1:9000/input");
+		FileInputFormat.setInputPaths(job, "hdfs://192.168.10.107:8020/input");
 
 		job.waitForCompletion(true);
 	}
