@@ -122,7 +122,7 @@ public class HbaseBatchImport {
 		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
 
 		// 设置hbase表名称
-		configuration.set(TableOutputFormat.OUTPUT_TABLE, "hradius");
+		configuration.set(TableOutputFormat.OUTPUT_TABLE, "htradius");
 
 		// 将该值改大，防止hbase超时退出
 		configuration.set("dfs.socket.timeout", "180000");
