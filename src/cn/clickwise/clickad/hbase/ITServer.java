@@ -5,15 +5,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
-import java.text.MessageFormat.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import cn.clickwise.lib.string.SSO;
 
@@ -90,6 +87,7 @@ public class ITServer implements Runnable{
 			  }
 			  restr=restr+radiusIds.get(radiusIds.size()-1);
 			}
+			
 			System.err.println("restr:"+restr);
 			//encode_res = encode_res.replaceAll("\\s+", "");	
 			//exchange.sendResponseHeaders(200, encode_res.length());
