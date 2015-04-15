@@ -25,46 +25,51 @@ import cn.clickwise.lib.time.TimeOpera;
 public class HbaseBatchImport {
 
 	static class BatchImportMapper extends
-			Mapper<LongWritable, Text, LongWritable, Text> {
+			Mapper<Object, Text,Text, Text> {
+		
 		SimpleDateFormat dateformat1 = new SimpleDateFormat("yyyyMMddHHmmss");
+		
+		Text k2=new Text();
 		Text v2 = new Text();
 
-		protected void map(LongWritable key, Text value, Context context)
+		protected void map(Object key, Text value, Context context)
 				throws java.io.IOException, InterruptedException {
-			final String[] splited = value.toString().split("\t");
+			
 			try {
-				final Date date = new Date(Long.parseLong(splited[0].trim()));
-				final String dateFormat = dateformat1.format(date);
-				String rowKey = splited[1] + ":" + dateFormat;
-				v2.set(rowKey + "\t" + value.toString());
-				context.write(key, v2);
+
+				String key_str=RandomGen.getRandomStr();
+				k2.set(key_str);
+				v2.set(value.toString());
+				context.write(k2, v2);
 			} catch (NumberFormatException e) {
 				final Counter counter = context.getCounter("BatchImport",
 						"ErrorFormat");
 				counter.increment(1L);
-				System.out.println("出错了" + splited[0] + " " + e.getMessage());
+				
 			}
 		};
 	}
 
 	static class BatchImportReducer extends
-			TableReducer<LongWritable, Text, NullWritable> {
+			TableReducer<Text, Text, NullWritable> {
 		
 		public static String RID = "rid";
 		public static String OIP = "oip";
 		public static String TNAME = "hradius";
 		
-		protected void reduce(LongWritable key,
+		protected void reduce(Text key,
 				java.lang.Iterable<Text> values, Context context)
 				throws java.io.IOException, InterruptedException {
+			
 			for (Text text : values) {
-				final String[] splited = text.toString().split("\t");
+				List<Put> puts=getPut(text.toString());
+				
 
-				final Put put = new Put(Bytes.toBytes(splited[0]));
-				put.add(Bytes.toBytes("cf"), Bytes.toBytes("date"),
-						Bytes.toBytes(splited[1]));
 				// 省略其他字段，调用put.add(....)即可
-				context.write(NullWritable.get(), put);
+				for(int j=0;j<puts.size();j++)
+				{
+				  context.write(NullWritable.get(), puts.get(j));
+				}
 			}
 		};
 		
@@ -111,6 +116,7 @@ public class HbaseBatchImport {
 	   }
 	}
 	public static void main(String[] args) throws Exception {
+		
 		final Configuration configuration = new Configuration();
 		// 设置zookeeper
 		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
