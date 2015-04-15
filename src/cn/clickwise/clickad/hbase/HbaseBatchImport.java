@@ -62,7 +62,7 @@ public class HbaseBatchImport {
 	public static void main(String[] args) throws Exception {
 		final Configuration configuration = new Configuration();
 		// 设置zookeeper
-		configuration.set("hbase.zookeeper.quorum", "hadoop1");
+		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
 
 		// 设置hbase表名称
 		configuration.set(TableOutputFormat.OUTPUT_TABLE, "wlan_log");
