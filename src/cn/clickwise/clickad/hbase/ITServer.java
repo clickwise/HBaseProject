@@ -39,7 +39,6 @@ public class ITServer implements Runnable{
 		try {
 			HttpServer hs = HttpServer.create(new InetSocketAddress(Integer.parseInt(properties.getProperty("port"))), 0);
 
-
 			ITHandler test_handler = new ITHandler();
 			hs.createContext("/ipq", test_handler);
 
