@@ -5,8 +5,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -71,8 +73,8 @@ public class ITServer implements Runnable{
 			   time=time.trim()+"_12:29:20";
 			}
 			
-			List<String> radiusIds=elits.get(ip, time.replaceAll("_", " "));
-			
+			List<String> oradiusIds=elits.get(ip, time.replaceAll("_", " "));
+			List<String> radiusIds=redupList(oradiusIds);
 			String restr="";
 			if(radiusIds==null)
 			{
@@ -100,7 +102,36 @@ public class ITServer implements Runnable{
 			pw.close();
 			os.close();
 			
-		}	
+		}
+		
+		public List<String> redupList(List<String> list)
+		{
+			List<String> rlist=new ArrayList<String>();
+			HashMap<String,Integer> rhash=new HashMap<String,Integer>();
+			String radiusId="";
+			for(int i=0;i<list.size();i++)
+			{
+				radiusId=list.get(i);
+				if(SSO.tioe(radiusId))
+				{
+					continue;
+				}
+				
+				if(!(rhash.containsKey(radiusId)))
+				{
+				   rhash.put(radiusId, 1);	
+				}	
+			}
+			
+			
+			for(Map.Entry<String, Integer> e:rhash.entrySet())
+			{
+				rlist.add(e.getKey());
+			}
+			
+			
+			return rlist;
+		}
 	}
 	
 	public HashMap<String,String> convertParams(String param_str)
