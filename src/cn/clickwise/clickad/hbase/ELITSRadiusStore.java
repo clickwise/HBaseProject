@@ -289,7 +289,7 @@ public class ELITSRadiusStore extends RadiusStore {
 					try {
                         count++;
 
-						Thread.sleep(10);             
+						Thread.sleep(30);             
 						if (SSO.tioe(line)) {
 							continue;
 						}
