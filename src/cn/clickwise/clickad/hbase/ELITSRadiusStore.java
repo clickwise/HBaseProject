@@ -191,7 +191,7 @@ public class ELITSRadiusStore extends RadiusStore {
 				pool.getTable(TNAME).put(put);
 				System.err.println("add " + rowkey);
 				pool.closeTablePool(TNAME);
-				Thread.sleep(100);
+				Thread.sleep(50);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
