@@ -55,7 +55,7 @@ public class HbaseBatchImport {
 		
 		public static String RID = "rid";
 		public static String OIP = "oip";
-		public static String TNAME = "hradius";
+		public static String TNAME = "htradius";
 		
 		protected void reduce(Text key,
 				java.lang.Iterable<Text> values, Context context)
@@ -119,8 +119,13 @@ public class HbaseBatchImport {
 		
 		final Configuration configuration = new Configuration();
 		// 设置zookeeper
+		/*******zj*********
 		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
-
+        *******************/
+		
+		/*******local**********/	 
+		 configuration.set("hbase.zookeeper.quorum", "adt80");
+		/**********************/
 		// 设置hbase表名称
 		configuration.set(TableOutputFormat.OUTPUT_TABLE, "htradius");
 
@@ -138,9 +143,14 @@ public class HbaseBatchImport {
 		job.setInputFormatClass(TextInputFormat.class);
 		// 不再设置输出路径，而是设置输出格式类型
 		job.setOutputFormatClass(TableOutputFormat.class);
-
+		/*******zj*********
 		FileInputFormat.setInputPaths(job, "hdfs://192.168.10.107:8020/user/clickwise/hradiusInput");
-
+        ******************/
+		
+		/*******local**********/
+		FileInputFormat.setInputPaths(job, "hdfs://adt82:8020/user/clickwise/hradiusInput");
+		/**********************/
+		
 		job.waitForCompletion(true);
 	}
 
