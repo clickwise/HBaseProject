@@ -124,7 +124,7 @@ public class HbaseBatchImport {
         *******************/
 		
 		/*******local**********/	 
-		 configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
+		 configuration.set("hbase.zookeeper.quorum", "adt80");
 		/**********************/
 		// 设置hbase表名称
 		configuration.set(TableOutputFormat.OUTPUT_TABLE, "htradius");
@@ -148,7 +148,7 @@ public class HbaseBatchImport {
         ******************/
 		
 		/*******local**********/
-		FileInputFormat.setInputPaths(job, "hdfs://192.168.110.182:8020/user/clickwise/hradiusInput");
+		FileInputFormat.setInputPaths(job, "hdfs://adt82:8020/user/clickwise/hradiusInput");
 		/**********************/
 		
 		job.waitForCompletion(true);
