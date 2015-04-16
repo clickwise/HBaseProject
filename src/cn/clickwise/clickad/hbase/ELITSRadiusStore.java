@@ -142,8 +142,8 @@ public class ELITSRadiusStore extends RadiusStore {
 			try {
 				pool.getTable(TNAME).put(put);
 				System.err.println("add " + rowkey);
-				//pool.closeTablePool(TNAME);
-				Thread.sleep(100);
+				pool.closeTablePool(TNAME);
+				//Thread.sleep(100);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -288,11 +288,8 @@ public class ELITSRadiusStore extends RadiusStore {
 				while ((line = br.readLine()) != null) {
 					try {
                         count++;
-                        if(count%1001==1)
-                        {
-                        	pool.closeTablePool(TNAME);
-                        }
-						Thread.sleep(1);             
+
+						Thread.sleep(10);             
 						if (SSO.tioe(line)) {
 							continue;
 						}
