@@ -296,13 +296,15 @@ public class ELITSRadiusStore extends RadiusStore {
 						eitsl.write(line);
 
 					} catch (Exception e) {
-
+						System.err.println(e.getMessage());
+						System.out.println("count:"+count);
 					}
 
 				}
 				System.out.println("count:"+count);
 			} catch (Exception e) {
-
+				System.err.println(e.getMessage());
+				System.out.println("count:"+count);
 			}
 		} else if (ga.equals("get")) {
 			List<String> rs = eitsl.get(ip, date + " " + time);
