@@ -1,8 +1,10 @@
 package cn.clickwise.clickad.hbase;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -247,12 +249,14 @@ public class ELITSRadiusStore extends RadiusStore {
 
 	public static void main(String[] args) {
 		
+	
 		if (args.length < 1) {
 			System.err
 					.println("Usage:<get or add> [<IP> <date> <time>|<day>]");
 			System.exit(1);
 		}
 
+		PrintWriter countPW=null;
 		String ga = args[0];
 
 		String day="";
@@ -262,6 +266,14 @@ public class ELITSRadiusStore extends RadiusStore {
 		String time = "";
 		int threadnum = 0;
 
+		try{
+			countPW=new PrintWriter(new FileWriter("countlog.txt"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		if(args.length==2)
 		{
 			day=args[1];
@@ -288,7 +300,11 @@ public class ELITSRadiusStore extends RadiusStore {
 				while ((line = br.readLine()) != null) {
 					try {
                         count++;
-
+                        if(count%10000==0)
+                        {
+                        	countPW.println(count);
+                        	countPW.flush();
+                        }
 						//Thread.sleep(200);             
 						if (SSO.tioe(line)) {
 							continue;
@@ -298,13 +314,16 @@ public class ELITSRadiusStore extends RadiusStore {
 					} catch (Exception e) {
 						System.err.println(e.getMessage());
 						System.out.println("count:"+count);
+						countPW.close();
 					}
 
 				}
 				System.out.println("count:"+count);
+				countPW.close();
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 				System.out.println("count:"+count);
+				countPW.close();
 			}
 		} else if (ga.equals("get")) {
 			List<String> rs = eitsl.get(ip, date + " " + time);
