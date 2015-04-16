@@ -288,7 +288,7 @@ public class ELITSRadiusStore extends RadiusStore {
 				while ((line = br.readLine()) != null) {
 					try {
 
-						Thread.sleep(10);
+						Thread.sleep(1);
 						if (SSO.tioe(line)) {
 							continue;
 						}
