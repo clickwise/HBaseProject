@@ -27,7 +27,7 @@ import cn.clickwise.lib.string.SSO;
 import cn.clickwise.lib.time.TimeOpera;
 
 /**
- * 根据md5(ip)+time+status查询 rowkey: IP+时间+状态 cf:column 为 erid:旧帐号 oip:旧ip
+ * 根据md5(ip)+time+status查询 rowkey: IP+时间+状态 cf:column 为 erid:c(value 为旧帐号) oip:c (value 为 旧ip)
  * 
  * @author zkyz
  */
@@ -276,7 +276,7 @@ public class ELITSRadiusStore extends RadiusStore {
 		
 		if(args.length==2)
 		{
-			day=args[1];
+			day=args[1];		
 		}
 		
 		if (args.length == 4) {
