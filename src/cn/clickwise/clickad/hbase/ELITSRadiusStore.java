@@ -1,8 +1,10 @@
 package cn.clickwise.clickad.hbase;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ import cn.clickwise.lib.string.SSO;
 import cn.clickwise.lib.time.TimeOpera;
 
 /**
- * 根据md5(ip)+time+status查询 rowkey: IP+时间+状态 cf:column 为 erid:旧帐号 oip:旧ip
+ * 根据md5(ip)+time+status查询 rowkey: IP+时间+状态 cf:column 有两个，分别为{ rid:c(value 为旧帐号) oip:c (value 为 旧ip)}
  * 
  * @author zkyz
  */
@@ -143,7 +145,7 @@ public class ELITSRadiusStore extends RadiusStore {
 				pool.getTable(TNAME).put(put);
 				System.err.println("add " + rowkey);
 				pool.closeTablePool(TNAME);
-				//Thread.sleep(100);
+				Thread.sleep(2);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -191,7 +193,7 @@ public class ELITSRadiusStore extends RadiusStore {
 				pool.getTable(TNAME).put(put);
 				System.err.println("add " + rowkey);
 				pool.closeTablePool(TNAME);
-				Thread.sleep(100);
+				Thread.sleep(10);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -247,12 +249,14 @@ public class ELITSRadiusStore extends RadiusStore {
 
 	public static void main(String[] args) {
 		
+	
 		if (args.length < 1) {
 			System.err
 					.println("Usage:<get or add> [<IP> <date> <time>|<day>]");
 			System.exit(1);
 		}
 
+		PrintWriter countPW=null;
 		String ga = args[0];
 
 		String day="";
@@ -262,9 +266,22 @@ public class ELITSRadiusStore extends RadiusStore {
 		String time = "";
 		int threadnum = 0;
 
+		try{
+			countPW=new PrintWriter(new FileWriter("countlog.txt"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		if(args.length==2)
 		{
 			day=args[1];
+			if(day.indexOf("-")<0)
+			{
+			  day=TimeOpera.int2string(day);
+			}
+			System.err.println("day:"+day);
 		}
 		
 		if (args.length == 4) {
@@ -288,20 +305,30 @@ public class ELITSRadiusStore extends RadiusStore {
 				while ((line = br.readLine()) != null) {
 					try {
                         count++;
-
-						Thread.sleep(100);             
+                        if(count%10000==0)
+                        {
+                        	countPW.println(count);
+                        	countPW.flush();
+                        }
+						//Thread.sleep(200);             
 						if (SSO.tioe(line)) {
 							continue;
 						}
 						eitsl.write(line);
 
 					} catch (Exception e) {
-
+						System.err.println(e.getMessage());
+						System.out.println("count:"+count);
+						countPW.close();
 					}
 
 				}
+				System.out.println("count:"+count);
+				countPW.close();
 			} catch (Exception e) {
-
+				System.err.println(e.getMessage());
+				System.out.println("count:"+count);
+				countPW.close();
 			}
 		} else if (ga.equals("get")) {
 			List<String> rs = eitsl.get(ip, date + " " + time);

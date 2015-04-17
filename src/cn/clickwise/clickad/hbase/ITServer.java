@@ -5,8 +5,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -35,6 +37,7 @@ public class ITServer implements Runnable{
 		// TODO Auto-generated method stub
 		// 配置成根据传入请求的前缀不同调用不同的处理程序
 		// 每种请求对应一个handler
+		logger.info("start ipq server");
 		
 		try {
 			HttpServer hs = HttpServer.create(new InetSocketAddress(Integer.parseInt(properties.getProperty("port"))), 0);
@@ -58,6 +61,7 @@ public class ITServer implements Runnable{
 			
 			String uri = exchange.getRequestURI().toString();
 			System.out.println("uri:"+uri);
+			logger.info("uri:"+uri);
 			uri = uri.replaceFirst("\\/ipq\\?", "");
 			HashMap<String,String> phash=convertParams(uri);
 			String ip="";
@@ -71,15 +75,22 @@ public class ITServer implements Runnable{
 			   time=time.trim()+"_12:29:20";
 			}
 			
-			List<String> radiusIds=elits.get(ip, time.replaceAll("_", " "));
-			
+			List<String> oradiusIds=elits.get(ip, time.replaceAll("_", " "));
+			List<String> radiusIds=redupList(oradiusIds);
 			String restr="";
 			if(radiusIds==null)
 			{
+				logger.info("not find:"+uri);
+				System.out.println("not find:"+uri);
 				restr="nothing";
 			}
 			else
 			{
+			   if(radiusIds.size()==0)
+			    {
+			    	System.out.println("not find:"+uri);
+				}
+			    
 			  for(int i=0;i<radiusIds.size()-1;i++)
 			  {
 				 restr=restr+radiusIds.get(i)+",";
@@ -100,7 +111,36 @@ public class ITServer implements Runnable{
 			pw.close();
 			os.close();
 			
-		}	
+		}
+		
+		public List<String> redupList(List<String> list)
+		{
+			List<String> rlist=new ArrayList<String>();
+			HashMap<String,Integer> rhash=new HashMap<String,Integer>();
+			String radiusId="";
+			for(int i=0;i<list.size();i++)
+			{
+				radiusId=list.get(i);
+				if(SSO.tioe(radiusId))
+				{
+					continue;
+				}
+				
+				if(!(rhash.containsKey(radiusId)))
+				{
+				   rhash.put(radiusId, 1);	
+				}	
+			}
+			
+			
+			for(Map.Entry<String, Integer> e:rhash.entrySet())
+			{
+				rlist.add(e.getKey());
+			}
+			
+			
+			return rlist;
+		}
 	}
 	
 	public HashMap<String,String> convertParams(String param_str)
