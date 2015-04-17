@@ -276,7 +276,12 @@ public class ELITSRadiusStore extends RadiusStore {
 		
 		if(args.length==2)
 		{
-			day=args[1];		
+			day=args[1];
+			if(day.indexOf("-")<0)
+			{
+			  day=TimeOpera.int2string(day);
+			}
+			System.err.println("day:"+day);
 		}
 		
 		if (args.length == 4) {
