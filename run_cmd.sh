@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#Usage sh run_cmd 20150416 > logp.txt 2>&1 &
 DAY=$1
 echo "day:"$DAY
 mkdir radius_parse/$DAY
