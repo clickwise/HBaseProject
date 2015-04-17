@@ -38,6 +38,7 @@ public class ITServer implements Runnable{
 		// 配置成根据传入请求的前缀不同调用不同的处理程序
 		// 每种请求对应一个handler
 		logger.info("start ipq server");
+		
 		try {
 			HttpServer hs = HttpServer.create(new InetSocketAddress(Integer.parseInt(properties.getProperty("port"))), 0);
 
@@ -60,6 +61,7 @@ public class ITServer implements Runnable{
 			
 			String uri = exchange.getRequestURI().toString();
 			System.out.println("uri:"+uri);
+			logger.info("uri:"+uri);
 			uri = uri.replaceFirst("\\/ipq\\?", "");
 			HashMap<String,String> phash=convertParams(uri);
 			String ip="";
