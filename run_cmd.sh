@@ -3,9 +3,9 @@
 DAY=$1
 echo "day:"$DAY
 mkdir radius_parse/$DAY
-for LINE in `ls /data/radius_data/$DAY`  
+for LINE in `ls /data4/radius_data/$DAY`  
 do  
-        ./radius_hbase /data/radius_data/$DAY/$LINE > radius_parse/$DAY/$LINE   
+        ./radius_hbase /data4/radius_data/$DAY/$LINE > radius_parse/$DAY/$LINE   
         cat radius_parse/$DAY/$LINE | java -Xmx3000m -cp out/myhbase.jar cn.clickwise.clickad.hbase.ELITSRadiusStore add $DAY         
         echo $LINE 
 done
