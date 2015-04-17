@@ -80,15 +80,17 @@ public class ITServer implements Runnable{
 			String restr="";
 			if(radiusIds==null)
 			{
-				logger.info("no find:"+uri);
+				logger.info("not find:"+uri);
+				System.out.println("not find:"+uri);
 				restr="nothing";
 			}
 			else
 			{
-			    if(radiusIds.size()==0)
-				{
-					logger.info("no find:"+uri);
+			   if(radiusIds.size()==0)
+			    {
+			    	System.out.println("not find:"+uri);
 				}
+			    
 			  for(int i=0;i<radiusIds.size()-1;i++)
 			  {
 				 restr=restr+radiusIds.get(i)+",";
