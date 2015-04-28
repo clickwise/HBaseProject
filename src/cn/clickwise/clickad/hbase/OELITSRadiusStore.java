@@ -385,19 +385,29 @@ public class OELITSRadiusStore extends RadiusStore {
 
 			String line = "";
 			int count = 0;
+			List<Put> puts=new ArrayList<Put>();
+			Put onePut=null;
 			try {
 				while ((line = br.readLine()) != null) {
 					try {
 						count++;
-						if (count % 10000 == 0) {
+						if (count % 1000 == 0) {
 							countPW.println(count);
 							countPW.flush();
+							puts=new ArrayList<Put>();
+							eitsl.writeBat(puts, false, false, 1024*1024*64);
 						}
 						// Thread.sleep(200);
 						if (SSO.tioe(line)) {
 							continue;
 						}
-						eitsl.write(line);
+						onePut=eitsl.getPut(line);
+						if(onePut==null)
+						{
+							continue;
+						}
+						
+						puts.add(onePut);
 
 					} catch (Exception e) {
 						System.err.println(e.getMessage());
