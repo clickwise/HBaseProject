@@ -56,18 +56,17 @@ public class OELITSRadiusStore extends RadiusStore {
 		 * configuration.set("hbase.master", "192.168.10.103:60000");
 		 ********************************/
 
-		/************
-		 * local*******************
-		 * configuration.set("hbase.zookeeper.property.clientPort", "2181");
-		 * configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
-		 * configuration.set("hbase.master", "192.168.110.80:60000");
-		 ************************************/
+		/************local*******************/
+		 configuration.set("hbase.zookeeper.property.clientPort", "2181");
+		 configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
+		 configuration.set("hbase.master", "192.168.110.80:60000");
+		/************************************/
 
-		/************ zj *****************/
+		/************ zj *****************
 		configuration.set("hbase.zookeeper.property.clientPort", "2181");
 		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
 		configuration.set("hbase.master", "192.168.10.128:60010");
-		/********************************/
+		********************************/
 
 		pool = new HTablePool(configuration, 100);
 		String[] cfs = { RID, OIP };
@@ -393,9 +392,9 @@ public class OELITSRadiusStore extends RadiusStore {
 						count++;
 						if (count % 1000 == 0) {
 							countPW.println(count);
-							countPW.flush();
-							puts=new ArrayList<Put>();
+							countPW.flush();					
 							eitsl.writeBat(puts, false, false, 1024*1024*64);
+							puts=new ArrayList<Put>();
 						}
 						// Thread.sleep(200);
 						if (SSO.tioe(line)) {
