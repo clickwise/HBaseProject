@@ -56,17 +56,18 @@ public class OELITSRadiusStore extends RadiusStore {
 		 * configuration.set("hbase.master", "192.168.10.103:60000");
 		 ********************************/
 
-		/************local*******************/
-		 configuration.set("hbase.zookeeper.property.clientPort", "2181");
-		 configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
-		 configuration.set("hbase.master", "192.168.110.80:60000");
+		/************ local *******************/
+		configuration.set("hbase.zookeeper.property.clientPort", "2181");
+		configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
+		configuration.set("hbase.master", "192.168.110.80:60000");
 		/************************************/
 
-		/************ zj *****************
-		configuration.set("hbase.zookeeper.property.clientPort", "2181");
-		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
-		configuration.set("hbase.master", "192.168.10.128:60010");
-		********************************/
+		/************
+		 * zj *****************
+		 * configuration.set("hbase.zookeeper.property.clientPort", "2181");
+		 * configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
+		 * configuration.set("hbase.master", "192.168.10.128:60010");
+		 ********************************/
 
 		pool = new HTablePool(configuration, 100);
 		String[] cfs = { RID, OIP };
@@ -76,6 +77,7 @@ public class OELITSRadiusStore extends RadiusStore {
 
 	/**
 	 * 表不存在才创建
+	 * 
 	 * @param tableName
 	 */
 	public static void createTable(String tableName, String[] cfs) {
@@ -170,8 +172,8 @@ public class OELITSRadiusStore extends RadiusStore {
 		ip = fields[0];
 
 		String md5ip = MD5Code.makeMD5(ip);
-		Put put=null;
-		
+		Put put = null;
+
 		for (int j = 1; j < fields.length; j++) {
 
 			String[] tokens = null;
@@ -191,10 +193,51 @@ public class OELITSRadiusStore extends RadiusStore {
 			put.add(OIP.getBytes(), "c".getBytes(), ip.getBytes());
 
 		}
-		
+
 		return put;
 	}
-	
+
+	public List<Put> getPuts(String record) {
+
+		String ip = "";
+		String status = "";
+		String radiusid = "";
+		long time = 0;
+		String time_str = "";
+
+		String[] fields = record.split("\\s+");
+		if (fields.length < 1) {
+			return null;
+		}
+
+		ip = fields[0];
+		List<Put> list = new ArrayList<Put>();
+		String md5ip = MD5Code.makeMD5(ip);
+		Put put = null;
+
+		for (int j = 1; j < fields.length; j++) {
+
+			String[] tokens = null;
+			tokens = fields[j].split(":");
+			if (tokens.length != 3) {
+				continue;
+			}
+
+			time = Long.parseLong(tokens[0]);
+			radiusid = tokens[1];
+			status = tokens[2];
+			time_str = TimeOpera.long2strm(time);
+
+			String rowkey = md5ip + time_str.replaceAll("\\s+", "") + status;
+			put = new Put(rowkey.getBytes());
+			put.add(RID.getBytes(), "c".getBytes(), radiusid.getBytes());
+			put.add(OIP.getBytes(), "c".getBytes(), ip.getBytes());
+			list.add(put);
+		}
+
+		return list;
+	}
+
 	/**
 	 * 写入hbase数据库，批量写入
 	 * 
@@ -234,9 +277,9 @@ public class OELITSRadiusStore extends RadiusStore {
 
 			System.out.println("insert complete" + ",costs:"
 					+ (System.currentTimeMillis() - all) * 1.0 / 1000 + "ms");
-			
+
 		} catch (Exception e) {
-             System.err.println(e.getMessage());
+			System.err.println(e.getMessage());
 		}
 
 	}
@@ -381,30 +424,36 @@ public class OELITSRadiusStore extends RadiusStore {
 
 			String line = "";
 			int count = 0;
-			List<Put> puts=new ArrayList<Put>();
-			Put onePut=null;
+			List<Put> puts = new ArrayList<Put>();
+			List<Put> tputs = null;
+			Put onePut = null;
 			try {
 				while ((line = br.readLine()) != null) {
 					try {
 						count++;
 						if (count % 10000 == 0) {
 							countPW.println(count);
-							countPW.flush();					
-							eitsl.writeBat(puts, false, false, 1024*1024*64);
-							puts=new ArrayList<Put>();
+							countPW.flush();
+							eitsl.writeBat(puts, false, false, 1024 * 1024 * 64);
+							puts = new ArrayList<Put>();
 						}
 						// Thread.sleep(200);
 						if (SSO.tioe(line)) {
 							continue;
 						}
-						onePut=eitsl.getPut(line);
-						if(onePut==null)
-						{
+						tputs = eitsl.getPuts(line);
+						if (tputs == null) {
 							continue;
 						}
-						
-						puts.add(onePut);
 
+						for (int k = 0; k < tputs.size(); k++) {
+							onePut = tputs.get(k);
+							if (onePut == null) {
+								continue;
+							}
+
+							puts.add(onePut);
+						}
 					} catch (Exception e) {
 						System.err.println(e.getMessage());
 						System.out.println("count:" + count);
@@ -412,9 +461,9 @@ public class OELITSRadiusStore extends RadiusStore {
 					}
 
 				}
-				
-				eitsl.writeBat(puts, false, false, 1024*1024*64);
-				
+
+				eitsl.writeBat(puts, false, false, 1024 * 1024 * 64);
+
 				System.out.println("count:" + count);
 				countPW.close();
 			} catch (Exception e) {
