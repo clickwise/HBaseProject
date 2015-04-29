@@ -76,7 +76,6 @@ public class OELITSRadiusStore extends RadiusStore {
 
 	/**
 	 * 表不存在才创建
-	 * 
 	 * @param tableName
 	 */
 	public static void createTable(String tableName, String[] cfs) {
@@ -215,7 +214,6 @@ public class OELITSRadiusStore extends RadiusStore {
 
 			pool.getTable(TNAME).setAutoFlush(autoFlush);
 			if (writeBuffer != 0) {
-
 				pool.getTable(TNAME).setWriteBufferSize(writeBuffer);
 			}
 
@@ -347,7 +345,6 @@ public class OELITSRadiusStore extends RadiusStore {
 		String ga = args[0];
 
 		String day = "";
-
 		String ip = "";
 		String date = "";
 		String time = "";
