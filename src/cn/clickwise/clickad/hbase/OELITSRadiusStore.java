@@ -56,17 +56,17 @@ public class OELITSRadiusStore extends RadiusStore {
 		 * configuration.set("hbase.master", "192.168.10.103:60000");
 		 ********************************/
 
-		/************local*******************
+		/************local*******************/
 		 configuration.set("hbase.zookeeper.property.clientPort", "2181");
 		 configuration.set("hbase.zookeeper.quorum", "192.168.110.80");
 		 configuration.set("hbase.master", "192.168.110.80:60000");
-		************************************/
+		/************************************/
 
-		/************ zj *****************/
+		/************ zj *****************
 		configuration.set("hbase.zookeeper.property.clientPort", "2181");
 		configuration.set("hbase.zookeeper.quorum", "192.168.10.130");
 		configuration.set("hbase.master", "192.168.10.128:60010");
-		/********************************/
+		********************************/
 
 		pool = new HTablePool(configuration, 100);
 		String[] cfs = { RID, OIP };
@@ -76,7 +76,6 @@ public class OELITSRadiusStore extends RadiusStore {
 
 	/**
 	 * 表不存在才创建
-	 * 
 	 * @param tableName
 	 */
 	public static void createTable(String tableName, String[] cfs) {
@@ -346,7 +345,6 @@ public class OELITSRadiusStore extends RadiusStore {
 		String ga = args[0];
 
 		String day = "";
-
 		String ip = "";
 		String date = "";
 		String time = "";
