@@ -387,7 +387,7 @@ public class OELITSRadiusStore extends RadiusStore {
 				while ((line = br.readLine()) != null) {
 					try {
 						count++;
-						if (count % 1000 == 0) {
+						if (count % 10000 == 0) {
 							countPW.println(count);
 							countPW.flush();					
 							eitsl.writeBat(puts, false, false, 1024*1024*64);
@@ -412,6 +412,9 @@ public class OELITSRadiusStore extends RadiusStore {
 					}
 
 				}
+				
+				eitsl.writeBat(puts, false, false, 1024*1024*64);
+				
 				System.out.println("count:" + count);
 				countPW.close();
 			} catch (Exception e) {
